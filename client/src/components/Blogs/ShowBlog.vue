@@ -1,10 +1,10 @@
 <template>
     <div>
-        <h1>Show Blog</h1>
+        <h1>Show Product</h1>
         <p>id: {{ blog.id }}</p>
-        <p>title: {{ blog.title }}</p>
-        <p>content: {{ blog.content }}</p>
-        <p>category: {{ blog.category }}</p>
+        <p>ชื่อรุ่น: {{ blog.title }}</p>
+        <p>ชิป: {{ blog.content }}</p>
+        <p>ระบบเซ็นเซอร์: {{ blog.category }}</p>
         <p>status: {{ blog.status }}</p>
         <p>
         <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">แก้ไข
