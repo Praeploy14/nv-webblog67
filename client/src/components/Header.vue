@@ -2,7 +2,7 @@
   <div>
     <div class="nv-navbar">
       <ul class="nav">
-        <li><router-link :to="{ name: 'blogs' }">Blogs</router-link></li>
+        <li><router-link :to="{ name: 'blogs' }">Apple Watch</router-link></li>
         <li><router-link :to="{ name: 'users' }">Users</router-link></li>
         <li><router-link :to="{ name: 'comments' }">Comments</router-link></li>
         <!-- if isLogin is true, show logout menu. otherwise, show login menu-->
@@ -28,7 +28,7 @@ export default {
 </script>
 <style scoped>
 .nv-navbar {
-  background-color: palegoldenrod;
+  background-color: rgb(246, 159, 252);
   width: 100%;
   height: 20px;
   padding: 10px 0px 10px 0px;
@@ -54,7 +54,7 @@ export default {
   color: darkslategrey;
 }
 .nv-navbar .nav li a.router-link-active {
-  background-color: gold;
+  background-color: rgb(207, 34, 222);
   color: darkslategrey;
 }
 .clearfix {

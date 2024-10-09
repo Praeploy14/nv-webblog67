@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>Edit Blog</h1>
+    <h1>Edit Product</h1>
     <form v-on:submit.prevent="editBlog">
-      <p>title: <input type="text" v-model="blog.title" /></p>
+      <p>Name: <input type="text" v-model="blog.name" /></p>
       <transition name="fade">
         <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
           <img :src="BASE_URL + blog.thumbnail" alt="thumbnail" />
@@ -46,18 +46,22 @@
         </li>
       </transition-group>
       <div class="clearfix"></div>
-      <p><strong>content:</strong></p>
+
+      <p>Sip: <input type="text" v-model="blog.sip" /></p>
+
+      <p><strong>Sensor:</strong></p>
       <vue-ckeditor
-        v-model.lazy="blog.content"
+        v-model.lazy="blog.sensor"
         :config="config"
         @blur="onBlur($event)"
         @focus="onFocus($event)"
       />
-      <p>category: <input type="text" v-model="blog.category" /></p>
-      <p>status: <input type="text" v-model="blog.status" /></p>
+
+      <p>Price: <input type="text" v-model="blog.price" /></p>
+      
       <p>
-        <button type="submit">update blog</button>
-        <button v-on:click="navigateTo('/blogs')">กลับ</button>
+        <button type="submit">update </button>
+        <button v-on:click="navigateTo('/blogs')">back</button>
       </p>
     </form>
   </div>

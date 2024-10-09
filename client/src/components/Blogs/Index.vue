@@ -2,18 +2,20 @@
     <div>
         <h2>All Product</h2>
         <p><button v-on:click="logout">Logout</button></p>
-        <h4>มี {{blogs.length}}สินค้า</h4>
-        <p><button v-on:click="navigateTo('/blog/create')">สร้าง blog</button></p>
+        <h4>Has {{blogs.length}} Product</h4>
+        <p><button v-on:click="navigateTo('/blog/create')">create</button></p>
         <div v-for="blog in blogs" v-bind:key="blog.id">
             <p>id: {{ blog.id }}</p>
-            <p>ชื่อรุ่น: {{ blog.title }}</p>
-            <p>ชิป: {{ blog.content }}</p>
-            <p>ระบบเซ็นเซอร์: {{ blog.category }}</p>
-            <p>status: {{ blog.status }}</p>
+            <p>Name: {{ blog.name }}</p>
+            <p>Sip: {{ blog.sip }}</p>
+            <p>Sensor: {{ blog.sensor }}</p>
+            <p>Price: {{ blog.price }}</p>
+            
+           
             <p>
-            <button v-on:click="navigateTo('/blog/'+ blog.id)">ดู blog</button>
-            <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">แก้ไข blog</button>
-            <button v-on:click="deleteBlog(blog)">ลบข้อมูล</button>
+            <button v-on:click="navigateTo('/blog/'+ blog.id)">SeeMore</button>
+            <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">Edit</button>
+            <button v-on:click="deleteBlog(blog)">Delete</button>
             </p>
             <hr>
         </div>
@@ -58,5 +60,5 @@
         }
     }
 </script>
-<style scoped>
+<style scoped>  
 </style>

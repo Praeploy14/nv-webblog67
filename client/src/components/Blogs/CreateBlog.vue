@@ -3,8 +3,8 @@
     <h1>Create Blog</h1>
     <form v-on:submit.prevent="createBlog">
       <p>
-        title:
-        <input type="text" v-model="blog.title" />
+        Name:
+        <input type="text" v-model="blog.name" />
       </p>
       <transition name="fade">
         <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
@@ -51,23 +51,30 @@
         </transition-group>
         <div class="clearfix"></div>
       </div>
+
       <p>
-        <strong>content:</strong>
+        Sip:
+        <input type="text" v-model="blog.sip" />
+      </p>
+
+      <p>
+        <strong>Sensor:</strong>
       </p>
       <vue-ckeditor
-        v-model.lazy="blog.content"
+        v-model.lazy="blog.sensor"
         :config="config"
         @blur="onBlur($event)"
         @focus="onFocus($event)"
       />
+
       <p>
-        category:
-        <input type="text" v-model="blog.category" />
+        Price:
+        <input type="text" v-model="blog.price" />
       </p>
-      <p>
-        status:
-        <input type="text" v-model="blog.status" />
-      </p>
+
+      
+
+      
       <p>
         <button type="submit">create blog</button>
       </p>
