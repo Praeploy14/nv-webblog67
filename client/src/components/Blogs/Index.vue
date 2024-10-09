@@ -1,14 +1,14 @@
 <template>
     <div>
-        <h2>Get all blogs</h2>
+        <h2>All Product</h2>
         <p><button v-on:click="logout">Logout</button></p>
-        <h4>จำนวน blog {{blogs.length}}</h4>
+        <h4>มี {{blogs.length}}สินค้า</h4>
         <p><button v-on:click="navigateTo('/blog/create')">สร้าง blog</button></p>
         <div v-for="blog in blogs" v-bind:key="blog.id">
             <p>id: {{ blog.id }}</p>
-            <p>title: {{ blog.title }}</p>
-            <p>content: {{ blog.content }}</p>
-            <p>category: {{ blog.category }}</p>
+            <p>ชื่อรุ่น: {{ blog.title }}</p>
+            <p>ชิป: {{ blog.content }}</p>
+            <p>ระบบเซ็นเซอร์: {{ blog.category }}</p>
             <p>status: {{ blog.status }}</p>
             <p>
             <button v-on:click="navigateTo('/blog/'+ blog.id)">ดู blog</button>
