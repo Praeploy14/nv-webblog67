@@ -1,6 +1,6 @@
 <template>
   <div class="blog-create">
-    <h1>Create Blog</h1>
+    <h1>Create Product</h1>
     <form v-on:submit.prevent="createBlog">
       <div class="form-group">
         <label for="blog-name">Name:</label>
@@ -49,7 +49,7 @@
         <input id="blog-price" type="text" v-model="blog.price" placeholder="Enter Price" />
       </div>
       <p>
-        <button type="submit" class="submit-button">Create Blog</button>
+        <center><button type="submit" class="submit-button">Create</button></center>
       </p>
     </form>
   </div>

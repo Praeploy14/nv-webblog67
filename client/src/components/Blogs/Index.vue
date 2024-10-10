@@ -4,6 +4,7 @@
   
       <h4>There are {{ blogs.length }} Products</h4>
       <button class="create-btn" v-on:click="navigateTo('/blog/create')">Create New Product</button>
+      
   
       <div v-for="blog in blogs" v-bind:key="blog.id" class="product-card">
         <div class="product-info">
@@ -225,4 +226,3 @@
     box-shadow: 0 6px 20px rgba(211, 47, 47, 0.3);
   }
   </style>
-  
