@@ -9,8 +9,8 @@
        
        
         <p>
-        <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">แก้ไขสินค้า</button>
-        <button v-on:click="navigateTo('/blogs')">กลับ </button>
+        <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">Edit</button>
+        <button v-on:click="navigateTo('/blogs')">Back </button>
         </p>
     </div>
 </template>
