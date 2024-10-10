@@ -1,19 +1,24 @@
 <template>
     <div class="product-page">
       <h2>All Products</h2>
-  
       <h4>There are {{ blogs.length }} Products</h4>
       <button class="create-btn" v-on:click="navigateTo('/blog/create')">Create New Product</button>
-      
   
       <div v-for="blog in blogs" v-bind:key="blog.id" class="product-card">
-        <div class="product-info">
-          <p><strong>ID:</strong> {{ blog.id }}</p>
-          <p><strong>Name:</strong> {{ blog.name }}</p>
-          <p><strong>SIP:</strong> {{ blog.sip }}</p>
-          <p><strong>Sensor:</strong> {{ blog.sensor.replace(/(<([^>]+)>)/gi, "") }}</p>
-          <p><strong>Price:</strong> {{ blog.price | formatPrice }}</p>
-        </div>
+        <transition name="fade">
+          <div class="product-content">
+            <div class="thumbnail-pic" v-if="blog.thumbnail && blog.thumbnail !== 'null'">
+              <img :src="BASE_URL + blog.thumbnail" alt="Thumbnail" />
+            </div>
+            <div class="product-info">
+              <p><strong>ID:</strong> {{ blog.id }}</p>
+              <p><strong>Name:</strong> {{ blog.name }}</p>
+              <p><strong>SIP:</strong> {{ blog.sip }}</p>
+              <p><strong>Sensor:</strong> {{ blog.sensor.replace(/(<([^>]+)>)/gi, "") }}</p>
+              <p><strong>Price:</strong> {{ blog.price | formatPrice }} ฿</p>
+            </div>
+          </div>
+        </transition>
   
         <div class="product-actions">
           <button class="view-btn" v-on:click="navigateTo('/blog/'+ blog.id)">View</button>
@@ -29,49 +34,48 @@
   </template>
   
   <script>
-  import BlogsService from '@/services/BlogsService'
+  import BlogsService from '@/services/BlogsService';
   
   export default {
     data() {
       return {
+        BASE_URL: "http://localhost:8081/assets/uploads/", // Correct URL for images
         blogs: []
-      }
+      };
     },
     async created() {
-      this.blogs = (await BlogsService.index()).data
+      this.blogs = (await BlogsService.index()).data;
     },
     methods: {
       logout() {
-        this.$store.dispatch('setToken', null)
-        this.$store.dispatch('setBlog', null)
-        this.$router.push({
-          name: 'login'
-        })
+        this.$store.dispatch('setToken', null);
+        this.$store.dispatch('setBlog', null);
+        this.$router.push({ name: 'login' });
       },
       navigateTo(route) {
-        this.$router.push(route)
+        this.$router.push(route);
       },
       async deleteBlog(blog) {
-        let result = confirm("Want to delete?")
+        let result = confirm("Want to delete?");
         if (result) {
           try {
-            await BlogsService.delete(blog)
-            this.refreshData()
+            await BlogsService.delete(blog);
+            this.refreshData();
           } catch (err) {
-            console.log(err)
+            console.log(err);
           }
         }
       },
       async refreshData() {
-        this.blogs = (await BlogsService.index()).data
+        this.blogs = (await BlogsService.index()).data;
       }
     },
     filters: {
       formatPrice(value) {
-        return new Intl.NumberFormat().format(value)
+        return new Intl.NumberFormat().format(value);
       }
     }
-  }
+  };
   </script>
   
   <style scoped>
@@ -138,6 +142,11 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   }
   
+  .product-content {
+    display: flex; /* Use flexbox to align image and info side by side */
+    align-items: center; /* Center vertically */
+  }
+  
   .product-info p {
     margin: 10px 0;
     font-size: 1rem;
@@ -146,6 +155,21 @@
   
   .product-info strong {
     color: #333;
+  }
+  
+  /* Thumbnail Styles */
+  .thumbnail-pic {
+    display: flex; /* Center the image */
+    justify-content: center; /* Center the image horizontally */
+    align-items: center; /* Center the image vertically */
+    margin-right: 15px; /* Space between the image and text */
+  }
+  
+  .thumbnail-pic img {
+    max-width: 200px; /* Increased maximum width for the thumbnail */
+    max-height: 200px; /* Increased maximum height for the thumbnail */
+    object-fit: cover; /* Maintain aspect ratio and cover the area */
+    border-radius: 10px; /* Optional: add some rounded corners */
   }
   
   /* Action Buttons */
@@ -226,3 +250,4 @@
     box-shadow: 0 6px 20px rgba(211, 47, 47, 0.3);
   }
   </style>
+  
