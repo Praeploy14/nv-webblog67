@@ -78,11 +78,11 @@
   .product-page {
     max-width: 950px;
     margin: 0 auto;
-    padding: 50px 20px;
+    padding: 50px 300px;
     background: linear-gradient(145deg, #EAB8E4, #A4D8E1); /* Light purple to light blue gradient */
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    font-family: 'Poppins', sans-serif; /* Modern and popular font */
+    font-family: 'Poppins', Cinzel; /* Modern and popular font */
   }
   
   h2 {

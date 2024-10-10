@@ -159,7 +159,7 @@ export default {
 <style scoped>
 .blog-create {
   background: linear-gradient(to bottom right, #b2e0f5, #c5f0d9); /* Soft gradient from light blue to light pastel green */
-  padding: 80px; /* Increased padding for a spacious layout */
+  padding: 50px 100px; /* Increased padding for a spacious layout */
   border-radius: 12px; /* Slightly rounded corners */
   max-width: 600px;
   margin: auto;

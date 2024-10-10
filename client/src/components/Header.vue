@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="nv-navbar">
-      <img src="path/to/your/watch-logo.png" alt="Watch Logo" class="logo" /> <!-- Replace with your logo path -->
+      <img src="@/assets/logo-apple.png" class="logo" alt="Apple Logo" />  
       <ul class="nav">
         <li><router-link :to="{ name: 'blogs' }" class="nav-item">Apple Watch</router-link></li>
         <li><router-link :to="{ name: 'users' }" class="nav-item">Users</router-link></li>
@@ -30,7 +30,7 @@ export default {
 <style scoped>
 .nv-navbar {
   background: linear-gradient(145deg, #f69fbc, #d0b6e0); /* Gradient background from pink to light purple */
-  padding: 15px; /* More padding for a better look */
+  padding: 1px; /* More padding for a better look */
   display: flex; /* Use Flexbox for alignment */
   justify-content: space-between; /* Space between logo and nav items */
   align-items: center; /* Center items vertically */
@@ -38,9 +38,9 @@ export default {
 }
 
 .logo {
-  width: 40px; /* Set the logo size */
+  width: 100px; /* Set the logo size */
   height: auto; /* Maintain aspect ratio */
-  margin-right: 20px; /* Space between logo and nav items */
+  margin-right: 0px; /* Space between logo and nav items */
 }
 
 .nv-navbar .nav {
