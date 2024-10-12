@@ -1,6 +1,6 @@
 <template>
     <div class="blog-create">
-      <h1>Create Product</h1>
+      <h1>Create Products</h1>
       <form v-on:submit.prevent="createBlog">
         <div class="form-group">
           <label for="blog-name">Name:</label>
@@ -158,7 +158,7 @@
   
   <style scoped>
   .blog-create {
-    background: linear-gradient(to bottom right, #b2e0f5, #c5f0d9); /* Soft gradient from light blue to light pastel green */
+    background: linear-gradient(to bottom right, #b3dff4, #c5f0d9); /* Soft gradient from light blue to light pastel green */
     padding: 50px 100px; /* Increased padding for a spacious layout */
     border-radius: 12px; /* Slightly rounded corners */
     max-width: 600px;
