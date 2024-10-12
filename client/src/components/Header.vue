@@ -10,6 +10,7 @@
         <li><router-link :to="{ name: 'users' }" class="nav-item">Users</router-link></li>
         <li v-if="!isLogin()"><router-link :to="{ name: 'login' }" class="nav-item">Login</router-link></li>
         <li v-else><button @click="logout" class="nav-item logout-btn">Logout</button></li>
+        <!-- <li v-else><button @click="logout" class="nav-item logout-btn">Logout</button></li> -->
       </ul>
     </div>
   </div>
