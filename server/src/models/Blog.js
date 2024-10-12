@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         sip: DataTypes.TEXT,
         sensor: DataTypes.TEXT,
         price: DataTypes.TEXT,
+        // price: DataTypes.TEXT,
         
         
     })
