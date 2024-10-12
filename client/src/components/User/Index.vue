@@ -81,7 +81,7 @@ export default {
   max-width: 1500px;
   margin: 0 auto;
   padding: 50px 100px;
-  background: linear-gradient(145deg, #3a9edd, #e29fd9); /* Dark AI-inspired gradient */
+  background: linear-gradient(145deg, #3ca2e1, #e1a0d9); /* Dark AI-inspired gradient */
   color: white;
   border-radius: 0px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
