@@ -75,7 +75,7 @@ export default {
   max-width: 400px;
   margin: 60px auto;
   padding: 40px;
-  background: linear-gradient(135deg, #b2ebf2, #f8bbd0); /* Deeper pastel blue and pink gradient */
+  background: linear-gradient(135deg, #bcf4fb, #fabfd4); /* Deeper pastel blue and pink gradient */
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(100, 149, 237, 0.5); /* Darker shadow */
   text-align: center;
