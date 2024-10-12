@@ -1,67 +1,65 @@
 <template>
-  <div>
-    <h1>Edit Blog</h1>
-    <form v-on:submit.prevent="editBlog">
-      <p>title: <input type="text" v-model="blog.title" /></p>
+  <div class="edit-product-container">
+    <h1>Edit Product</h1>
+    <form v-on:submit.prevent="editBlog" class="edit-product-form">
+      <p>Name: <input type="text" v-model="blog.name" /></p>
+
       <transition name="fade">
-        <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
+        <div class="thumbnail-pic" v-if="blog.thumbnail !== 'null'">
           <img :src="BASE_URL + blog.thumbnail" alt="thumbnail" />
         </div>
       </transition>
-      <form enctype="multipart/form-data" novalidate>
+
+      <div class="file-upload-section">
+        
+        <p class="upload-progress" v-if="isSaving">Uploading {{ fileCount }} files...</p>
+        <p class="upload-success" v-if="isSuccess">Upload Successful.</p>
+
         <div class="dropbox">
+          <p class="upload-instruction" v-if="isInitial">
+            click to browse
+          </p>
           <input
             type="file"
             multiple
             :name="uploadFieldName"
             :disabled="isSaving"
-            @change="
-              filesChange($event.target.name, $event.target.files);
-              fileCount = $event.target.files.length;
-            "
+            @change="handleFileChange($event)"
             accept="image/*"
             class="input-file"
           />
-          <!-- <p v-if="isInitial || isSuccess"> -->
-          <p v-if="isInitial">
-            Drag your file(s) here to begin<br />
-            or click to browse
-          </p>
-          <p v-if="isSaving">Uploading {{ fileCount }} files...</p>
-          <p v-if="isSuccess">Upload Successful.</p>
         </div>
-      </form>
+      </div>
+
       <transition-group tag="ul" class="pictures">
-        <li v-for="picture in pictures" v-bind:key="picture.id">
+        <li v-for="picture in pictures" :key="picture.id">
           <img
-            style="margin-bottom: 5px"
+            class="picture-image"
             :src="BASE_URL + picture.name"
             alt="picture image"
           />
           <br />
-          <button v-on:click.prevent="useThumbnail(picture.name)">
-            Thumbnail
-          </button>
-          <button v-on:click.prevent="delFile(picture)">Delete</button>
+          <button v-on:click.prevent="useThumbnail(picture.name)" class="thumb-button">Thumbnail</button>
+          <button v-on:click.prevent="delFile(picture)" class="delete-button">Delete</button>
         </li>
       </transition-group>
+
       <div class="clearfix"></div>
-      <p><strong>content:</strong></p>
-      <vue-ckeditor
-        v-model.lazy="blog.content"
-        :config="config"
-        @blur="onBlur($event)"
-        @focus="onFocus($event)"
-      />
-      <p>category: <input type="text" v-model="blog.category" /></p>
-      <p>status: <input type="text" v-model="blog.status" /></p>
-      <p>
-        <button type="submit">update blog</button>
-        <button v-on:click="navigateTo('/blogs')">กลับ</button>
-      </p>
+
+      <p>Sip: <input type="text" v-model="blog.sip" /></p>
+
+      <p>Sensor: <input type="text" v-model="blog.sensor" /></p>
+
+      <p>Price: <input type="text" v-model="blog.price" /></p>
+
+      <div class="button-group">
+        <button type="submit" class="update-button">Update</button>
+        <button v-on:click="navigateTo('/blogs')" class="back-button">Back</button>
+      </div>
     </form>
   </div>
 </template>
+
 <script>
 import BlogsService from "@/services/BlogsService";
 import VueCkeditor from "vue-ckeditor2";
@@ -78,7 +76,6 @@ export default {
     return {
       BASE_URL: "http://localhost:8081/assets/uploads/",
       error: null,
-      // uploadedFiles: [],
       uploadError: null,
       currentStatus: null,
       uploadFieldName: "userPhoto",
@@ -86,12 +83,12 @@ export default {
       pictures: [],
       pictureIndex: 0,
       blog: {
-        title: "",
+        name: "",
         thumbnail: "null",
+        sip: "",
+        sensor: "",
+        price: "",
         pictures: "null",
-        content: "",
-        category: "",
-        status: "",
       },
       config: {
         toolbar: [
@@ -102,105 +99,61 @@ export default {
     };
   },
   methods: {
-    async delFile(material) {
-      let result = confirm("Want to delete?");
+    async delFile(picture) {
+      const result = confirm("Want to delete?");
       if (result) {
-        let dataJSON = {
-          filename: material.name,
-        };
-
-        await UploadService.delete(dataJSON);
-        for (var i = 0; i < this.pictures.length; i++) {
-          if (this.pictures[i].id === material.id) {
-            this.pictures.splice(i, 1);
-            this.materialIndex--;
-            break;
-          }
-        }
+        await UploadService.delete({ filename: picture.name });
+        this.pictures = this.pictures.filter(item => item.id !== picture.id);
       }
     },
     async editBlog() {
       try {
         await BlogsService.put(this.blog);
-        this.$router.push({
-          name: "blogs",
-        });
+        this.$router.push({ name: "blogs" });
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     },
-    onBlur(editor) {
-      console.log(editor);
-    },
-    onFocus(editor) {
-      console.log(editor);
-    },
-    navigateTo(route) {
-      console.log(route);
-      this.$router.push(route);
-    },
-    wait(ms) {
-      return (x) => {
-        return new Promise((resolve) => setTimeout(() => resolve(x), ms));
-      };
-    },
-    reset() {
-      // reset form to initial state
-      this.currentStatus = STATUS_INITIAL;
-      // this.uploadedFiles = []
-      this.uploadError = null;
-      this.uploadedFileNames = [];
+    handleFileChange(event) {
+      const { files } = event.target;
+      this.fileCount = files.length;
+
+      if (files.length) {
+        const formData = new FormData();
+        Array.from(files).forEach(file => {
+          formData.append(this.uploadFieldName, file, file.name);
+          this.uploadedFileNames.push(file.name);
+        });
+        this.save(formData);
+      }
     },
     async save(formData) {
-      // upload data to the server
       try {
         this.currentStatus = STATUS_SAVING;
         await UploadService.upload(formData);
         this.currentStatus = STATUS_SUCCESS;
-
-        // update image uploaded display
-        let pictureJSON = [];
-        this.uploadedFileNames.forEach((uploadFilename) => {
-          let found = false;
-          for (let i = 0; i < this.pictures.length; i++) {
-            if (this.pictures[i].name == uploadFilename) {
-              found = true;
-              break;
-            }
-          }
-          if (!found) {
+        this.uploadedFileNames.forEach(uploadFilename => {
+          if (!this.pictures.some(picture => picture.name === uploadFilename)) {
             this.pictureIndex++;
-            let pictureJSON = {
-              id: this.pictureIndex,
-              name: uploadFilename,
-            };
-            this.pictures.push(pictureJSON);
+            this.pictures.push({ id: this.pictureIndex, name: uploadFilename });
           }
         });
         this.clearUploadResult();
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.currentStatus = STATUS_FAILED;
       }
     },
-    filesChange(fieldName, fileList) {
-      // handle file changes
-      const formData = new FormData();
-      if (!fileList.length) return;
-      // append the files to FormData
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append(fieldName, fileList[x], fileList[x].name);
-        this.uploadedFileNames.push(fileList[x].name);
-      });
-      // save it
-      this.save(formData);
-    },
-    clearUploadResult: function () {
+    clearUploadResult() {
       setTimeout(() => this.reset(), 5000);
     },
     useThumbnail(filename) {
-      console.log(filename);
       this.blog.thumbnail = filename;
+    },
+    reset() {
+      this.currentStatus = STATUS_INITIAL;
+      this.uploadError = null;
+      this.uploadedFileNames = [];
     },
   },
   computed: {
@@ -217,148 +170,59 @@ export default {
       return this.currentStatus === STATUS_FAILED;
     },
   },
-  components: {
-    VueCkeditor,
-  },
   async created() {
     this.currentStatus = STATUS_INITIAL;
-    this.config.toolbar = [
-      {
-        name: "document",
-        items: [
-          "Source",
-          "-",
-          "Save",
-          "NewPage",
-          "Preview",
-          "Print",
-          "-",
-          "Templates",
-        ],
-      },
-      {
-        name: "clipboard",
-        items: [
-          "Cut",
-          "Copy",
-          "Paste",
-          "PasteText",
-          "PasteFromWord",
-          "-",
-          "Undo",
-          "Redo",
-        ],
-      },
-      {
-        name: "editing",
-        items: ["Find", "Replace", "-", "SelectAll", "-", "Scayt"],
-      },
-      {
-        name: "forms",
-        items: [
-          "Form",
-          "Checkbox",
-          "Radio",
-          "TextField",
-          "Textarea",
-          "Select",
-          "Button",
-          "ImageButton",
-          "HiddenField",
-        ],
-      },
-      "/",
-      {
-        name: "basicstyles",
-        items: [
-          "Bold",
-          "Italic",
-          "Underline",
-          "Strike",
-          "Subscript",
-          "Superscript",
-          "-",
-          "CopyFormatting",
-          "RemoveFormat",
-        ],
-      },
-      {
-        name: "paragraph",
-        items: [
-          "NumberedList",
-          "BulletedList",
-          "-",
-          "Outdent",
-          "Indent",
-          "-",
-          "Blockquote",
-          "CreateDiv",
-          "-",
-          "JustifyLeft",
-          "JustifyCenter",
-          "JustifyRight",
-          "JustifyBlock",
-          "-",
-          "BidiLtr",
-          "BidiRtl",
-          "Language",
-        ],
-      },
-      { name: "links", items: ["Link", "Unlink", "Anchor"] },
-      {
-        name: "insert",
-        items: [
-          "Image",
-          "Flash",
-          "Table",
-          "HorizontalRule",
-          "Smiley",
-          "SpecialChar",
-          "PageBreak",
-          "Iframe",
-          "InsertPre",
-        ],
-      },
-      "/",
-      { name: "styles", items: ["Styles", "Format", "Font", "FontSize"] },
-      { name: "colors", items: ["TextColor", "BGColor"] },
-      { name: "tools", items: ["Maximize", "ShowBlocks"] },
-      { name: "about", items: ["About"] },
-    ];
-
     try {
       let blogId = this.$route.params.blogId;
       this.blog = (await BlogsService.show(blogId)).data;
       this.pictures = JSON.parse(this.blog.pictures);
       this.pictureIndex = this.pictures.length;
     } catch (error) {
-      console.log(error);
-    }
-  },
-  async mounted() {
-    try {
-      let blogId = this.$route.params.blogId;
-      this.blog = (await BlogsService.show(blogId)).data;
-      this.pictures = JSON.parse(this.blog.pictures);
-    } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 };
 </script>
+
 <style scoped>
-.dropbox {
-  outline: 2px dashed grey; /* the dash box */
-  outline-offset: -10px;
-  background: lemonchiffon;
+.upload-instruction {
+  text-align: center;
   color: dimgray;
-  padding: 10px 10px;
-  min-height: 200px; /* minimum height */
+  font-weight: bold;
+}
+
+.edit-product-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #d9a8ff, #a9dbff); /* Pastel purple to light blue */
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', Cinzel;
+}
+
+.edit-product-form p {
+  margin-bottom: 15px;
+}
+
+.file-upload-section {
+  margin: 20px 0;
+}
+
+.dropbox {
+  outline: 2px dashed grey;
+  outline-offset: -10px;
+  background: rgb(205, 255, 249);
+  color: dimgray;
+  padding: 20px;
+  min-height: 120px;
   position: relative;
   cursor: pointer;
+  transition: background 0.3s;
 }
+
 .input-file {
-  opacity: 0; /* invisible but it's there! */
+  opacity: 0;
   width: 100%;
   height: 200px;
   position: absolute;
@@ -366,35 +230,93 @@ export default {
 }
 
 .dropbox:hover {
-  background: khaki; /* when mouse over to the drop zone, change color 
-*/
+  background: rgb(249, 179, 255);
 }
 
-.dropbox p {
-  font-size: 1.2em;
-  text-align: center;
-  padding: 50px 0;
-}
-ul.pictures {
+.pictures {
   list-style: none;
   padding: 0;
   margin: 0;
-  float: left;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
-ul.pictures li {
-  float: left;
+
+.pictures li {
+  margin-right: 15px;
+  margin-bottom: 15px;
 }
-ul.pictures li img {
+
+.picture-image {
   max-width: 180px;
-  margin-right: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
-.clearfix {
-  clear: both;
-}
-/* thumbnail */
+
 .thumbnail-pic img {
   width: 200px;
+}
+
+.button-group {
+  display: flex; /* Use flexbox to center buttons */
+  justify-content: center; /* Center the buttons */
+  margin-top: 20px;
+}
+
+.update-button,
+.back-button,
+.thumb-button,
+.delete-button {
+  padding: 10px 25px; /* Adjust padding for oval shape */
+  margin: 0 10px; /* Margin between buttons */
+  border: none;
+  border-radius: 30px; /* Make buttons oval */
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Added shadow for a nice effect */
+}
+
+.update-button {
+  background-color: #7a67a5; /* Soft Purple */
+  color: white;
+}
+
+.update-button:hover {
+  background-color: #6f5c94; /* Darker Purple */
+  transform: scale(1.05);
+}
+
+.back-button {
+  background-color: #56cfe1; /* Soft Blue */
+  color: white;
+}
+
+.back-button:hover {
+  background-color: #4ba3c7; /* Darker Blue */
+  transform: scale(1.05);
+}
+
+.thumb-button {
+  background-color: #3fa2df; /* Soft Purple */
+  color: white;
+}
+
+.thumb-button:hover {
+  background-color: #1b78d5; /* Darker Purple */
+  transform: scale(1.05);
+}
+
+.delete-button {
+  background-color: #e57373; /* Soft Red */
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f; /* Darker Red */
+  transform: scale(1.05);
+}
+
+.clearfix {
+  clear: both;
 }
 </style>
